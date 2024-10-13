@@ -45,4 +45,3 @@ Per creare utenza e accedere al pannello di ADMIN:
 ```
 python manage.py createsuperuser
 ```
-```
