@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include
 from django.contrib import admin
+from django.template.defaulttags import url
 from django.urls import path
 
 import dataimport.views
@@ -22,5 +23,5 @@ import dataimport.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', dataimport.views.home, name='home'),
-    path('dataimport/', include('dataimport.urls')),
+    path('dataimport/', include('dataimport.urls', namespace='dataimport')),
 ]

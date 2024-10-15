@@ -1,10 +1,12 @@
 {% extends "index.html" %}
 {% block content %}
-    <table id="myTable" class="display">
+    <table id="province-table" class="display">
         <thead>
         <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
+            <th>Codice regione</th>
+            <th>Denominazione regione</th>
+            <th>Totale casi</th>
+            <th>Numero province</th>
         </tr>
         </thead>
         <tbody>
@@ -13,9 +15,78 @@
 {% endblock content %}
 {% block page_script %}
     <script>
-        $(document).ready(function () {
-            console.log("here")
-            $('#myTable').DataTable();
+        let province_table = $("#province-table").DataTable({
+            "order": [[2, "desc"]],
+            "pageLength": 10,
+            "language": {
+                "lengthMenu": 'Visualizza <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="50">50</option>' +
+                    '</select> per pagina',
+                "zeroRecords": "Spiacenti, nessun risultato.",
+                "info": "Visualizzata pagina _PAGE_ di _PAGES_ (Risultati da _START_ a _END_ di _TOTAL_ elementi)",
+                "infoEmpty": "Nessun risultato disponibile.",
+                "infoFiltered": "(filtrato su un totale di _MAX_ dati)",
+                "paginate": {
+                    "first": "Prima",
+                    "last": "Ultima",
+                    "next": "Prossima",
+                    "previous": "Precedente"
+                },
+                "search": "Cerca:",
+            },
+            "layout": {
+                "topEnd": {
+                    "buttons": [
+                        {
+                            "text": 'Importa dati',
+                            "attr": {
+                                "title": 'Importa dati dalla repository di GitHub',
+                                "id": 'importa-dati-province'
+                            },
+                            action: function (e, dt, node, config) {
+                                import_dati_province()
+                            }
+                        }
+                    ]
+                }
+            },
+            "columns": [
+                {"data": "codice_regione"},
+                {"data": "denominazione_regione"},
+                {"data": "totale_casi"},
+                {"data": "numero_province"},
+            ],
+            "ajax": {
+                "url": "{% url "dataimport:data_import_province_table_ajax" %}",
+                "type": "POST"
+            },
+            "processing": true,
+            "serverSide": true,
+            "searching": false,
+            "columnDefs": [],
         });
+
+        function import_dati_province() {
+            let importa_dati_province_button = $("#importa-dati-province");
+            importa_dati_province_button.html("<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Importazione in corso");
+            importa_dati_province_button.attr("disabled", true);
+
+            $.ajax({
+                type: "GET",
+                url: "{% url 'dataimport:data_import_province_from_github' %}",
+                success: function (data) {
+                    province_table.ajax.reload();
+                    importa_dati_province_button.html("Importa dati");
+                    importa_dati_province_button.attr("disabled", false);
+                },
+                error: function (data) {
+                    console.log(data)
+                }
+
+            });
+        }
     </script>
 {% endblock page_script %}
