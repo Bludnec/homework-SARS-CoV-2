@@ -89,11 +89,15 @@ def data_import_province_table_ajax(request):
 
 def data_import_province_from_github(request):
     data_import_configuration = DataImportConfiguration.get_config()
-    url = data_import_configuration.github_url_for_import_data
     try:
+        url = data_import_configuration.github_url_for_import_data
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
+
+        # Delete all the data to avoid conflicts or missing data
+        DataImportProvince.objects.all().delete()
+        # Import the new data
         process_import_data(data)
 
         # Update last data import

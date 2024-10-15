@@ -18,22 +18,6 @@
         let province_table = $("#province-table").DataTable({
             "order": [[2, "desc"]],
             "pageLength": 10,
-            "layout": {
-                "topEnd": {
-                    "buttons": [
-                        {
-                            "text": 'Import data',
-                            "attr": {
-                                "title": 'Import data from GitHub repository',
-                                "id": 'data-import-province-button'
-                            },
-                            action: function (e, dt, node, config) {
-                                import_dati_province()
-                            }
-                        }
-                    ]
-                }
-            },
             "columns": [
                 {"data": "region_code"},
                 {"data": "region_name"},
@@ -49,25 +33,5 @@
             "searching": false,
             "columnDefs": [],
         });
-
-        function import_dati_province() {
-            let importa_dati_province_button = $("#data-import-province-button");
-            importa_dati_province_button.html("<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Import in progres");
-            importa_dati_province_button.attr("disabled", true);
-
-            $.ajax({
-                type: "GET",
-                url: "{% url 'dataimport:data_import_province_from_github' %}",
-                success: function (data) {
-                    province_table.ajax.reload();
-                    importa_dati_province_button.html("Import data");
-                    importa_dati_province_button.attr("disabled", false);
-                },
-                error: function (data) {
-                    console.log(data)
-                }
-
-            });
-        }
     </script>
 {% endblock page_script %}
