@@ -21,9 +21,12 @@ def home(request):
 
 
 def province_table(request):
+    data_import_logger = DataImportConfiguration.get_config()
+    last_data_import = data_import_logger.last_data_import.strftime("%H:%M, %d %B %Y")
     data_dict = {
         'page': 'province-table',
-        'page_title': 'Province data table'
+        'page_title': 'Province data table',
+        'last_data_import': last_data_import
     }
     return render(request, 'province_table.html', data_dict)
 

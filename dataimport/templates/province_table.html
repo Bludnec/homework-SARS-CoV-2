@@ -1,5 +1,10 @@
 {% extends "index.html" %}
 {% block content %}
+    <style>
+        .noCursorPointer{
+            cursor: default!important;
+        }
+    </style>
     <table id="province-table" class="display">
         <thead>
         <tr>
@@ -18,6 +23,19 @@
         let province_table = $("#province-table").DataTable({
             "order": [[2, "desc"]],
             "pageLength": 10,
+            "layout": {
+                "topEnd": {
+                    "buttons": [
+                        {
+                            "text": 'Last update {{ last_data_import }}',
+                            'className': 'noCursorPointer',
+                            "attr": {
+                                "id": 'data-import-province-button',
+                            }
+                        }
+                    ]
+                }
+            },
             "columns": [
                 {"data": "region_code"},
                 {"data": "region_name"},
