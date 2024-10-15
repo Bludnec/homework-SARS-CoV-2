@@ -4,27 +4,27 @@ from django.db import models
 # Create your models here.
 class DataImportProvince(models.Model):
     data = models.DateTimeField("Data", blank=True, null=True)
-    stato = models.CharField("Stato", blank=True, null=True, max_length=255)
-    codice_regione = models.IntegerField("Codice regione", blank=True, null=True)
-    denominazione_regione = models.CharField("Denominazione regione", blank=True, null=True, max_length=255)
-    codice_provincia = models.IntegerField("Codice provincia", blank=True, null=True)
-    denominazione_provincia = models.CharField("Denominazione provincia", blank=True, null=True, max_length=255)
-    sigla_provincia = models.CharField("Sigla provincia", blank=True, null=True, max_length=255)
+    state = models.CharField("State", blank=True, null=True, max_length=255)
+    region_code = models.IntegerField("Region code", blank=True, null=True)
+    region_name = models.CharField("Region name", blank=True, null=True, max_length=255)
+    province_code = models.IntegerField("Province code", blank=True, null=True)
+    province_name = models.CharField("Province name", blank=True, null=True, max_length=255)
+    province_abbreviation = models.CharField("Province abbreviation", blank=True, null=True, max_length=255)
     lat = models.FloatField("Latitude", blank=True, null=True)
     long = models.FloatField("Longitude", blank=True, null=True)
-    totale_casi = models.IntegerField("Totale casi", blank=True, null=True)
+    total_cases = models.IntegerField("Total of cases", blank=True, null=True)
     note = models.TextField("Note", blank=True, null=True)
-    codice_nuts_1 = models.CharField("Codice nuts 1", blank=True, null=True, max_length=255)
-    codice_nuts_2 = models.CharField("Codice nuts 2", blank=True, null=True, max_length=255)
-    codice_nuts_3 = models.CharField("Codice nuts 3", blank=True, null=True, max_length=255)
+    codice_nuts_1 = models.CharField("Nuts code 1", blank=True, null=True, max_length=255)
+    codice_nuts_2 = models.CharField("Nuts code 2", blank=True, null=True, max_length=255)
+    codice_nuts_3 = models.CharField("Nuts code 3", blank=True, null=True, max_length=255)
 
     def __str__(self):
-        return "{}, codice {} - {}, codice {}".format(self.denominazione_provincia,
-                                                      self.codice_provincia,
-                                                      self.denominazione_regione,
-                                                      self.denominazione_provincia)
+        return "{}, codice {} - {}, codice {}".format(self.province_name,
+                                                      self.province_code,
+                                                      self.region_name,
+                                                      self.region_code)
 
     class Meta:
-        verbose_name = "Dato provincia importato da GitHub"
-        verbose_name_plural = "Dati provincia importati da GitHub"
-        ordering = ('codice_provincia', 'denominazione_provincia')
+        verbose_name = "Province data imported from GitHub"
+        verbose_name_plural = "Province data imported from GitHub"
+        ordering = ('province_code', 'province_name')

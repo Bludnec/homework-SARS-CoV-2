@@ -21,7 +21,7 @@ def home(request):
 def province_table(request):
     data_dict = {
         'page': 'province-table',
-        'page_title': 'Tabella dati per provincia'
+        'page_title': 'Province data table'
     }
     return render(request, 'province_table.html', data_dict)
 
@@ -34,31 +34,31 @@ def data_import_province_table_ajax(request):
 
     order_column = int(request.POST.get("order[0][column]", 2))
     order_dir = request.POST.get("order[0][dir]", "desc")
-    order_column_name = request.POST.get("columns[%s][data]" % order_column, "totale_casi_sum")
+    order_column_name = request.POST.get("columns[%s][data]" % order_column, "total_cases_sum")
 
-    if order_column_name == 'totale_casi':
-        order_column_name = 'totale_casi_sum'
+    if order_column_name == 'total_cases':
+        order_column_name = 'total_cases_sum'
 
     if order_dir == "desc":
         order_string = "-%s" % order_column_name
     else:
         order_string = "%s" % order_column_name
 
-    if order_column_name == 'totale_casi_sum':
+    if order_column_name == 'total_cases_sum':
         queryset = (
             DataImportProvince.objects
-            .values('codice_regione', 'denominazione_regione')
+            .values('region_code', 'region_name')
             .annotate(
-                totale_casi_sum=Sum('totale_casi'),
+                total_cases_sum=Sum('total_cases'),
                 numero_province=Count('id')
             )
-        ).order_by(order_string, 'denominazione_regione')
+        ).order_by(order_string, 'region_name')
     else:
         queryset = (
             DataImportProvince.objects
-            .values('codice_regione', 'denominazione_regione')
+            .values('region_code', 'region_name')
             .annotate(
-                totale_casi_sum=Sum('totale_casi'),
+                total_cases_sum=Sum('total_cases'),
                 numero_province=Count('id')
             )
         ).order_by(order_string)
@@ -73,9 +73,9 @@ def data_import_province_table_ajax(request):
     }
     for el in queryset[start:length + start]:
         response['data'].append({
-            "codice_regione": el['codice_regione'],
-            "denominazione_regione": el['denominazione_regione'],
-            "totale_casi": el['totale_casi_sum'],
+            "region_code": el['region_code'],
+            "region_name": el['region_name'],
+            "total_cases": el['total_cases_sum'],
             "numero_province": el['numero_province'],
         })
     return HttpResponse(json.dumps(response), content_type="application/json")

@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Dato provincia importato da GitHub',
                 'verbose_name_plural': 'Dati provincia importati da GitHub',
-                'ordering': ('codice_provincia', 'denominazione_provincia'),
+                'ordering': ('codice_provincia', 'province_name'),
             },
         ),
     ]

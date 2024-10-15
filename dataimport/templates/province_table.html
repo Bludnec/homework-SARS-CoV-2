@@ -3,10 +3,10 @@
     <table id="province-table" class="display">
         <thead>
         <tr>
-            <th>Codice regione</th>
-            <th>Denominazione regione</th>
-            <th>Totale casi</th>
-            <th>Numero province</th>
+            <th>Region code</th>
+            <th>Region name</th>
+            <th>Total of cases</th>
+            <th>Number of provinces</th>
         </tr>
         </thead>
         <tbody>
@@ -18,33 +18,14 @@
         let province_table = $("#province-table").DataTable({
             "order": [[2, "desc"]],
             "pageLength": 10,
-            "language": {
-                "lengthMenu": 'Visualizza <select>' +
-                    '<option value="5">5</option>' +
-                    '<option value="10">10</option>' +
-                    '<option value="20">20</option>' +
-                    '<option value="50">50</option>' +
-                    '</select> per pagina',
-                "zeroRecords": "Spiacenti, nessun risultato.",
-                "info": "Visualizzata pagina _PAGE_ di _PAGES_ (Risultati da _START_ a _END_ di _TOTAL_ elementi)",
-                "infoEmpty": "Nessun risultato disponibile.",
-                "infoFiltered": "(filtrato su un totale di _MAX_ dati)",
-                "paginate": {
-                    "first": "Prima",
-                    "last": "Ultima",
-                    "next": "Prossima",
-                    "previous": "Precedente"
-                },
-                "search": "Cerca:",
-            },
             "layout": {
                 "topEnd": {
                     "buttons": [
                         {
-                            "text": 'Importa dati',
+                            "text": 'Import data',
                             "attr": {
-                                "title": 'Importa dati dalla repository di GitHub',
-                                "id": 'importa-dati-province'
+                                "title": 'Import data from GitHub repository',
+                                "id": 'data-import-province-button'
                             },
                             action: function (e, dt, node, config) {
                                 import_dati_province()
@@ -54,9 +35,9 @@
                 }
             },
             "columns": [
-                {"data": "codice_regione"},
-                {"data": "denominazione_regione"},
-                {"data": "totale_casi"},
+                {"data": "region_code"},
+                {"data": "region_name"},
+                {"data": "total_cases"},
                 {"data": "numero_province"},
             ],
             "ajax": {
@@ -70,8 +51,8 @@
         });
 
         function import_dati_province() {
-            let importa_dati_province_button = $("#importa-dati-province");
-            importa_dati_province_button.html("<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Importazione in corso");
+            let importa_dati_province_button = $("#data-import-province-button");
+            importa_dati_province_button.html("<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Import in progres");
             importa_dati_province_button.attr("disabled", true);
 
             $.ajax({
@@ -79,7 +60,7 @@
                 url: "{% url 'dataimport:data_import_province_from_github' %}",
                 success: function (data) {
                     province_table.ajax.reload();
-                    importa_dati_province_button.html("Importa dati");
+                    importa_dati_province_button.html("Import data");
                     importa_dati_province_button.attr("disabled", false);
                 },
                 error: function (data) {
