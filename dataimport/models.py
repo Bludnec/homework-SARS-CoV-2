@@ -35,7 +35,10 @@ class DataImportProvince(models.Model):
 class DataImportConfiguration(models.Model):
     last_data_import = models.DateTimeField("Data", blank=True, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
-    github_url_for_import_data = models.URLField("Github URL for import data", blank=True, null=True)
+    github_url_for_import_data = models.URLField(
+        "Github URL for import data", blank=True, null=True,
+        default="https://raw.githubusercontent.com/pcm-dpc/COVID-19/refs/heads/master/dati-json"
+                "/dpc-covid19-ita-province-latest.json")
 
     def __str__(self):
         return "{}".format(self.last_data_import)
