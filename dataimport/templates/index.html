@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
     <script src="https://kit.fontawesome.com/e21505ebc3.js" crossorigin="anonymous"></script>
+    <!-- Datatable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
 </head>
 <!-- Main Sidebar Container -->
 <body class="sidebar-mini" style="height: auto;">
@@ -24,8 +28,8 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="{% url 'home' %}" class="brand-link">
-                  <img src="{% static ' /img/logo.png' %}" alt="Logo" class="brand-image img-circle elevation-3"
-                   style="opacity: .8">
+{#                  <img src="{% static '/img/logo.png' %}" alt="Logo" class="brand-image img-circle elevation-3"#}
+{#                   style="opacity: .8">#}
             <span class="brand-text font-weight-light">Homework</span>
         </a>
 
@@ -106,3 +110,6 @@
 </div>
 </body>
 </html>
+
+{% block page_script %}
+{% endblock page_script %}
