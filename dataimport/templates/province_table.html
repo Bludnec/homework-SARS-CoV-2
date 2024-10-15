@@ -1,8 +1,8 @@
 {% extends "index.html" %}
 {% block content %}
     <style>
-        .noCursorPointer{
-            cursor: default!important;
+        .noCursorPointer {
+            cursor: default !important;
         }
     </style>
     <table id="province-table" class="display">
@@ -22,9 +22,25 @@
     <script>
         let province_table = $("#province-table").DataTable({
             "order": [[2, "desc"]],
-            "pageLength": 10,
+            "pageLength": 50,
+            "bLengthChange" : false,
             "layout": {
                 "topEnd": {
+                    "buttons": [
+                        {
+                            "extend": 'excelHtml5',
+                            "text": 'Export to Excel the current data',
+                            "exportOptions": {
+                                "columns": [1, 2],
+                                "modifier": {
+                                    "order": 'current',
+                                    "page": 'all'
+                                },
+                            },
+                        }
+                    ]
+                },
+                "topStart": {
                     "buttons": [
                         {
                             "text": 'Last update {{ last_data_import }}',
