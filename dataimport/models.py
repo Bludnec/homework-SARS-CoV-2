@@ -1,3 +1,5 @@
+from datetime import timezone, datetime
+
 from django.db import models
 
 
@@ -28,3 +30,31 @@ class DataImportProvince(models.Model):
         verbose_name = "Province data imported from GitHub"
         verbose_name_plural = "Province data imported from GitHub"
         ordering = ('province_code', 'province_name')
+
+
+class DataImportConfiguration(models.Model):
+    last_data_import = models.DateTimeField("Data", blank=True, null=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    github_url_for_import_data = models.URLField("Github URL for import data", blank=True, null=True)
+
+    def __str__(self):
+        return "{}".format(self.last_data_import)
+
+    @staticmethod
+    def get_config():
+        try:
+            data_import_logger = DataImportConfiguration.objects.all()[0]
+        except:
+            data_import_logger = DataImportConfiguration(last_data_import=datetime.today())
+            data_import_logger.save()
+
+        return data_import_logger
+
+    def update_last_data_import(self):
+        self.last_data_import = datetime.today()
+        self.save()
+
+    class Meta:
+        verbose_name = "Logger import data from GitHub"
+        verbose_name_plural = "Loggers import data from GitHub"
+        ordering = ['last_data_import']

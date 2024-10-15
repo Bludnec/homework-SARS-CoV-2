@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import requests
 from django.db.models import Sum, Count
@@ -6,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from dataimport.models import DataImportConfiguration
 from dataimport.utils import *
 
 
@@ -28,6 +30,10 @@ def province_table(request):
 
 @csrf_exempt
 def data_import_province_table_ajax(request):
+    data_import_logger = DataImportConfiguration.get_config()
+    if not data_import_logger.last_data_import.date() == datetime.today().date():
+        data_import_province_from_github(request)
+
     draw = int(request.POST.get("draw", 1))
     start = int(request.POST.get("start", 0))
     length = int(request.POST.get("length", 0))
@@ -82,12 +88,17 @@ def data_import_province_table_ajax(request):
 
 
 def data_import_province_from_github(request):
-    url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/refs/heads/master/dati-json/dpc-covid19-ita-province-latest.json"
+    data_import_configuration = DataImportConfiguration.get_config()
+    url = data_import_configuration.github_url_for_import_data
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Controlla se la richiesta ha avuto successo
-        data = response.json()  # Parsea il JSON
+        response.raise_for_status()
+        data = response.json()
         process_import_data(data)
+
+        # Update last data import
+        data_import_configuration.update_last_data_import()
+
         return JsonResponse({'result': "OK"}, status=200)
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': str(e)}, status=500)
