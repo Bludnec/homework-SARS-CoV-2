@@ -5,6 +5,42 @@
             cursor: default !important;
         }
     </style>
+    <div class="alert alert-danger alert-dismissible" id="invalid-date-range-alert" style="display: none;">
+        <i class="icon fa fa-ban"></i> Attention! Please enter a valid date range!
+    </div>
+    <div class="row align-items-center mb-2" style="margin-bottom: 20px!important;">
+        <div class="col-auto">
+            <label for="date_range_from" class="mb-0">Import date from:</label>
+        </div>
+        <div class="col-auto">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+                </div>
+                <input type="text" class="form-control" id="date_range_from">
+            </div>
+        </div>
+        <div class="col-auto">
+            <label for="date_range_to" class="mb-0">Import date to:</label>
+        </div>
+        <div class="col-auto">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+                </div>
+                <input type="text" class="form-control" id="date_range_to">
+            </div>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary" id="apply_filter_button">Apply filter</button>
+        </div>
+    </div>
+
+
     <table id="province-table" class="display">
         <thead>
         <tr>
@@ -20,10 +56,12 @@
 {% endblock content %}
 {% block page_script %}
     <script>
+        let date_range_from;
+        let date_range_to;
         let province_table = $("#province-table").DataTable({
             "order": [[2, "desc"]],
             "pageLength": 50,
-            "bLengthChange" : false,
+            "bLengthChange": false,
             "layout": {
                 "topEnd": {
                     "buttons": [
@@ -60,12 +98,49 @@
             ],
             "ajax": {
                 "url": "{% url "dataimport:data_import_province_table_ajax" %}",
-                "type": "POST"
+                "type": "POST",
+                data: function (d) {
+                    d.date_range_from = date_range_from;
+                    d.date_range_to = date_range_from;
+                }
             },
             "processing": true,
             "serverSide": true,
             "searching": false,
             "columnDefs": [],
         });
+
+        $("#date_range_from").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: new Date(2024, 2, 24)
+        });
+        $("#date_range_to").datepicker({
+            dateFormat: "dd/mm/yy",
+        });
+
+        $("#apply_filter_button").on("click", function () {
+            date_range_from = $("#date_range_from").val();
+            date_range_to = $("#date_range_to").val();
+
+            if (validDateRange(date_range_from, date_range_to)) {
+                $("#invalid-date-range-alert").hide()
+                province_table.ajax.reload()
+            } else {
+                $("#invalid-date-range-alert").show()
+            }
+        });
+
+        function validDateRange(date1, date2) {
+            // Separare le date nei loro componenti
+            const [day1, month1, year1] = date1.split("/").map(Number);
+            const [day2, month2, year2] = date2.split("/").map(Number);
+
+            // Creare gli oggetti Date
+            const dateObj1 = new Date(year1, month1 - 1, day1); // month è 0-based
+            const dateObj2 = new Date(year2, month2 - 1, day2);
+
+            // Confrontare le date
+            return dateObj1 <= dateObj2;
+        }
     </script>
 {% endblock page_script %}

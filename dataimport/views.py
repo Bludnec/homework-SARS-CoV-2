@@ -45,6 +45,15 @@ def data_import_province_table_ajax(request):
     order_dir = request.POST.get("order[0][dir]", "desc")
     order_column_name = request.POST.get("columns[%s][data]" % order_column, "total_cases_sum")
 
+    date_range_from = request.POST.get("date_range_from", None)
+    date_range_to = request.POST.get("date_range_to", None)
+
+    if date_range_from:
+        date_range_from_datetime = datetime.strptime(date_range_from, '%d/%m/%Y')
+
+    if date_range_to:
+        date_range_to_datetime = datetime.strptime(date_range_to, '%d/%m/%Y')
+
     if order_column_name == 'total_cases':
         order_column_name = 'total_cases_sum'
 
@@ -53,24 +62,19 @@ def data_import_province_table_ajax(request):
     else:
         order_string = "%s" % order_column_name
 
+    queryset = DataImportProvince.objects.all()
+
+    queryset = (
+        queryset.values('region_code', 'region_name')
+        .annotate(
+            total_cases_sum=Sum('total_cases'),
+            numero_province=Count('id')
+        ))
+
     if order_column_name == 'total_cases_sum':
-        queryset = (
-            DataImportProvince.objects
-            .values('region_code', 'region_name')
-            .annotate(
-                total_cases_sum=Sum('total_cases'),
-                numero_province=Count('id')
-            )
-        ).order_by(order_string, 'region_name')
+        queryset = queryset.order_by(order_string, 'region_name')
     else:
-        queryset = (
-            DataImportProvince.objects
-            .values('region_code', 'region_name')
-            .annotate(
-                total_cases_sum=Sum('total_cases'),
-                numero_province=Count('id')
-            )
-        ).order_by(order_string)
+        queryset = queryset.order_by(order_string)
 
     count = queryset.count()
 
