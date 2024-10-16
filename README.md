@@ -1,26 +1,24 @@
 # homework-SARS-CoV-2
-Clonare la repository
+How start the project:
+
+Clone the repository and enter the repository directory
 ```
 git clone https://github.com/Bludnec/homework-SARS-CoV-2
 ```
-Entrare nella directory della repository
-```
-cd homework
-```
-Creare un environment
+Create a virtual environment
 ```
 python3 -m venv env
 ```
-Attivare il virtual python environment
+Activate the virtual Python environment
 ```
 source env/bin/activate   # Su Windows: env\Scripts\activate
 ```
-Installare tutti i requirements
+Install all the requirements
 ```
 pip install -r requirements.txt
 ```
 
-Creare un database locale postgres cambiando NAME, USER e PASSWORD in base a come è stato creato.
+Create a local PostgreSQL database, changing NAME, USER, and PASSWORD according to how it was created.
 ```
 DATABASES = {
     'default': {
@@ -33,15 +31,15 @@ DATABASES = {
     }
 }
 ```
-Migrare
+Run the migrations
 ```
 python manage.py migrate
 ```
-Lanciare il server
+Start the server
 ```
 python manage.py runserver
 ```
-Per creare utenza e accedere al pannello di ADMIN:
+To create a user and access the ADMIN panel:
 ```
 python manage.py createsuperuser
 ```
