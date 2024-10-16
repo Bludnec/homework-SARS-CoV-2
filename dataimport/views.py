@@ -34,7 +34,7 @@ def province_table(request):
 @csrf_exempt
 def data_import_province_table_ajax(request):
     data_import_logger = DataImportConfiguration.get_config()
-    if not data_import_logger.last_data_import.date() == datetime.today().date():
+    if not data_import_logger.last_data_import.date() == datetime.today().date() or not DataImportProvince.objects.exists():
         data_import_province_from_github(request)
 
     draw = int(request.POST.get("draw", 1))
