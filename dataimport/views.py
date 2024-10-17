@@ -15,7 +15,7 @@ from dataimport.utils import *
 def home(request):
     data_dict = {
         'page': 'home',
-        'page_title': 'Home'
+        'page_title': 'Small documentation'
     }
     return render(request, 'home.html', data_dict)
 

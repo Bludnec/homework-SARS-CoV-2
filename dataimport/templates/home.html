@@ -1,4 +1,28 @@
 {% extends "index.html" %}
 {% block content %}
-HOME
+    <p>
+        The project is a simple web application with two pages. The first is the current one where the small
+        documentation is written, and the second is the requested table displaying the data.
+    </p>
+    <p>
+        The project uses Django, PostgreSQL, and the AdminLTE library. The instructions to set up the project correctly
+        can be found in the repository's <strong><a
+            href="https://github.com/Bludnec/homework-SARS-CoV-2/blob/master/README.md">README</a></strong>.
+    </p>
+    <p>
+        The second page features a table showing the total number of SARS-CoV2 cases divided by region. It also includes
+        a filter that allows the data to be filtered by date.
+    </p>
+    <p>
+        The data is automatically loaded daily the first time the page is accessed (the first time it imports it will
+        take a while), and then every time you access it is fetched directly from the database.
+    </p>
+    <p>
+        To download the data in .xlsx format, simply click the button at the top right of the table, and it will
+        automatically download an .xlsx file with the columns 'Region name' and 'Total of cases'.
+    </p>
+    <p>
+        To filter the data also in the .xlsx file, apply the filter above the table first and then re-download using the
+        designated button.
+    </p>
 {% endblock content %}
