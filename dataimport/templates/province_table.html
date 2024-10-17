@@ -38,6 +38,8 @@
         <div class="col-auto">
             <button type="button" class="btn btn-primary" id="apply_filter_button">Apply filter</button>
         </div>
+        <div class="col-auto text-green siz" id="filter-success" style="display: none;">Applied <i
+                class="far fa-check-circle"></i></div>
     </div>
 
 
@@ -101,7 +103,7 @@
                 "type": "POST",
                 data: function (d) {
                     d.date_range_from = date_range_from;
-                    d.date_range_to = date_range_from;
+                    d.date_range_to = date_range_to;
                 }
             },
             "processing": true,
@@ -111,24 +113,39 @@
         });
 
         $("#date_range_from").datepicker({
-            dateFormat: "dd/mm/yy",
-            minDate: new Date(2024, 2, 24)
+            format: 'dd/mm/yyyy',
+            clearBtn: true,
+            autoclose: true,
         });
+        $('#date_range_from').datepicker('setStartDate', "24-02-2020");
         $("#date_range_to").datepicker({
-            dateFormat: "dd/mm/yy",
+            format: 'dd/mm/yyyy',
+            clearBtn: true,
+            autoclose: true,
         });
 
         $("#apply_filter_button").on("click", function () {
             date_range_from = $("#date_range_from").val();
             date_range_to = $("#date_range_to").val();
 
-            if (validDateRange(date_range_from, date_range_to)) {
+            if (((date_range_from && !date_range_to) || (!date_range_from && date_range_to)) || validDateRange(date_range_from, date_range_to)) {
                 $("#invalid-date-range-alert").hide()
-                province_table.ajax.reload()
+                province_table.ajax.reload();
+                showAndHideDiv();
             } else {
                 $("#invalid-date-range-alert").show()
             }
         });
+
+        function showAndHideDiv() {
+            $("#filter-success").fadeIn(); // Mostra il div con un effetto di dissolvenza
+
+            // Rimuovi il div dopo 3 secondi (3000 millisecondi)
+            setTimeout(() => {
+                $("#filter-success").fadeOut(); // Nascondi il div con un effetto di dissolvenza
+            }, 3000);
+        }
+
 
         function validDateRange(date1, date2) {
             // Separare le date nei loro componenti

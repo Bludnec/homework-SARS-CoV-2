@@ -48,11 +48,7 @@ def data_import_province_table_ajax(request):
     date_range_from = request.POST.get("date_range_from", None)
     date_range_to = request.POST.get("date_range_to", None)
 
-    if date_range_from:
-        date_range_from_datetime = datetime.strptime(date_range_from, '%d/%m/%Y')
 
-    if date_range_to:
-        date_range_to_datetime = datetime.strptime(date_range_to, '%d/%m/%Y')
 
     if order_column_name == 'total_cases':
         order_column_name = 'total_cases_sum'
@@ -63,6 +59,13 @@ def data_import_province_table_ajax(request):
         order_string = "%s" % order_column_name
 
     queryset = DataImportProvince.objects.all()
+
+    if date_range_from:
+        date_range_from_datetime = datetime.strptime(date_range_from, '%d/%m/%Y')
+        queryset = queryset.filter(data__gte=date_range_from_datetime)
+    if date_range_to:
+        date_range_to_datetime = datetime.strptime(date_range_to, '%d/%m/%Y')
+        queryset = queryset.filter(data__lte=date_range_to_datetime)
 
     queryset = (
         queryset.values('region_code', 'region_name')
