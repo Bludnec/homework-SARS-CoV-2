@@ -37,8 +37,8 @@ class DataImportConfiguration(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     github_url_for_import_data = models.URLField(
         "Github URL for import data", blank=True, null=True,
-        default="https://raw.githubusercontent.com/pcm-dpc/COVID-19/refs/heads/master/dati-json"
-                "/dpc-covid19-ita-province-latest.json")
+        default="https://raw.githubusercontent.com/pcm-dpc/COVID-19/refs/heads/master/dati-json/dpc-covid19-ita"
+                "-province.json")
 
     def __str__(self):
         return "{}".format(self.last_data_import)
@@ -46,18 +46,18 @@ class DataImportConfiguration(models.Model):
     @staticmethod
     def get_config():
         try:
-            data_import_logger = DataImportConfiguration.objects.all()[0]
+            data_import_config = DataImportConfiguration.objects.all()[0]
         except:
-            data_import_logger = DataImportConfiguration(last_data_import=datetime.today())
-            data_import_logger.save()
+            data_import_config = DataImportConfiguration(last_data_import=datetime.today())
+            data_import_config.save()
 
-        return data_import_logger
+        return data_import_config
 
     def update_last_data_import(self):
         self.last_data_import = datetime.today()
         self.save()
 
     class Meta:
-        verbose_name = "Logger import data from GitHub"
-        verbose_name_plural = "Loggers import data from GitHub"
+        verbose_name = "Import configuration"
+        verbose_name_plural = "Import configurations"
         ordering = ['last_data_import']

@@ -21,20 +21,22 @@ def home(request):
 
 
 def province_table(request):
-    data_import_logger = DataImportConfiguration.get_config()
-    last_data_import = data_import_logger.last_data_import.strftime("%H:%M, %d %B %Y")
+    data_import_config = DataImportConfiguration.get_config()
+    last_data_import = data_import_config.last_data_import.strftime("%H:%M, %d %B %Y")
+    data_exists = DataImportProvince.objects.exists()
     data_dict = {
         'page': 'province-table',
         'page_title': 'Province data table',
-        'last_data_import': last_data_import
+        'last_data_import': last_data_import,
+        'data_exists': data_exists
     }
     return render(request, 'province_table.html', data_dict)
 
 
 @csrf_exempt
 def data_import_province_table_ajax(request):
-    data_import_logger = DataImportConfiguration.get_config()
-    if not data_import_logger.last_data_import.date() == datetime.today().date() or not DataImportProvince.objects.exists():
+    data_import_config = DataImportConfiguration.get_config()
+    if not data_import_config.last_data_import.date() == datetime.today().date() or not DataImportProvince.objects.exists():
         data_import_province_from_github(request)
 
     draw = int(request.POST.get("draw", 1))

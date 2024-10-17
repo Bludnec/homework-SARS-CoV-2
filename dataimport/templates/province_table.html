@@ -83,7 +83,11 @@
                 "topStart": {
                     "buttons": [
                         {
-                            "text": 'Last update {{ last_data_import }}',
+                            "text": {% if data_exists %}
+                                        'Last update {{ last_data_import }}'
+                                    {% else %}
+                                        'Importing <i class="fa fa-spinner fa-pulse"></i>'
+                                    {% endif %},
                             'className': 'noCursorPointer',
                             "attr": {
                                 "id": 'data-import-province-button',
@@ -98,6 +102,11 @@
                 {"data": "total_cases"},
                 {"data": "numero_province"},
             ],
+            {% if not data_exists %}
+                initComplete: function () {
+                    $("#data-import-province-button").html("Last update {{ last_data_import }}");
+                },
+            {% endif %}
             "ajax": {
                 "url": "{% url "dataimport:data_import_province_table_ajax" %}",
                 "type": "POST",

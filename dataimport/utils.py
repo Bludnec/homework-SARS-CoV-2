@@ -22,4 +22,4 @@ def process_import_data(import_data):
         )
         objects_to_create.append(obj)
 
-    DataImportProvince.objects.bulk_create(objects_to_create)
+    DataImportProvince.objects.bulk_create(objects_to_create, batch_size=1000)
